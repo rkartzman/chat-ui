@@ -41,12 +41,14 @@ class Chatroom extends React.Component {
 		if (!this.validateMessage(ReactDOM.findDOMNode(this.refs.msg).value)) {
 			this.setState({msgErrors: true})
 		} else {
-			// send the message to the server via the emit event
+			// send the message to the socket server via the emit event
 			this.setState({msgErrors: false})
 			this.socket.emit('spotim/chat', { avatar: 'https://avatars.io/platform/userId', username: ReactDOM.findDOMNode(this.refs.username).value, text: ReactDOM.findDOMNode(this.refs.msg).value } );
 		}
 	}
 	validateMessage(msg) {
+		// return value true or false 
+		// true if message has length greater than zero
 		return msg.length > 0;
 	}
 	render() {
