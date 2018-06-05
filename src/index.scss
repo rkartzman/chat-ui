@@ -1,5 +1,9 @@
 $spot-blue: #0082DD;
 $dark-bg: #11181f;
+$light-gray-2: #7f9293;
+$msg-dark: #0f151b;
+$light-gray-1: #f7f7f7;
+$error-red: #ff0033;
 * {
   box-sizing: border-box;
 }
@@ -20,6 +24,7 @@ body {
     overflow: hidden;
     position: relative;
     height: 100%;
+    padding-top: 20px;
     .spotim-title {
       font-size: 1.5em;
     }
@@ -52,10 +57,10 @@ input[type="textarea"] {
   position: relative;
   height: calc(100% - 137px);
   // overflow: scroll;
-  background: #0f151b;
+  background: $light-gray-1;
   .chat__wrap {
     overflow-y: auto; 
-    padding: 10px 20px;
+    // padding: 10px 20px;
     position: absolute;
     height: calc(100% - 80px);
     left: 0;
@@ -69,6 +74,16 @@ input[type="textarea"] {
     list-style: none;
     margin: 0;
     padding: 0;
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      box-shadow: 0px -4px 10px 0px rgba(0,0,0,0.3);
+    }
   }
   .input {
     position: absolute;
@@ -77,6 +92,19 @@ input[type="textarea"] {
     // border: 10px solid #000;
     box-shadow: 0 0 5px 2px rgba(0,0,0,.3);
     border-top: 1px solid hsla(0,0%,100%,.05);
+    &.error {
+      border-top: 1px solid $error-red;
+      .input__message-wrapper {
+        .btn {
+          border-left: 1px solid $error-red;
+        }
+        input {
+          
+        }
+      }
+      .input__un-wrapper {
+      }
+    }
     &__wrapper {
       display: flex;
       flex-wrap: wrap;
@@ -136,25 +164,33 @@ input[type="textarea"] {
   margin-top: 0;
   position: relative;
   top: 1px;
-  background: #0f151b;
+  background: $light-gray-1;
+  padding: 10px 0 10px 15px;
+  &.currentUser {
+    background: $light-gray-1;
+    .h4, .message {
+      color: $msg-dark;
+    }
+  }
   .message-avatar {
     display: inline-block;
     border-radius: 50%;
     margin-right: 10px;
+    max-height: 20px;
     img {
       max-width: 20px;
 
     }
   }
   .h4 {
-    color: #7f9293;
+    color: $light-gray-2;
     font-size: 1rem;
     line-height: 24px;
     margin: inherit;
     padding-right: 40px;
   }
   .message {
-    color: #7f9293;
+    color: $light-gray-2;
     font-size: 1rem;
     line-height: 24px;
   }
@@ -179,7 +215,13 @@ input[type="textarea"] {
     letter-spacing: 1px;
     color: #7f9293;
     transition: color .5s,background .5s;
-    transform: translateZ(0)
+    transform: translateZ(0);
+    transition: background .6s, color .6s ease-in-out;
+    &:hover {
+      // background: #7f9293;
+      // color: #0d1318;
+      transition: background .6s, color .6s ease-in-out;
+    }
   }
 }
 

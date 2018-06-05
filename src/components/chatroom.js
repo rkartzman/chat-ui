@@ -12,10 +12,13 @@ class Chatroom extends React.Component {
 		this.state = {
 			chats: [
 				
-			]
+			],
+			msgErrors: false
 		}
 
+		// connect to spotim socket server 
 		this.socket = io("https://spotim-demo-chat-server.herokuapp.com");
+		// listen for events on the 'spotim/chat' channel and update state 
 		this.socket.on('spotim/chat', (msg) => {
 			this.setState({
 				chats: this.state.chats.concat([{
@@ -34,10 +37,19 @@ class Chatroom extends React.Component {
 	}
 	submitMessage(e) {
 		e.preventDefault();
-		this.socket.emit('spotim/chat', { avatar: 'https://avatars.io/platform/userId', username: ReactDOM.findDOMNode(this.refs.username).value, text: ReactDOM.findDOMNode(this.refs.msg).value } );
+		// check to see that there is text. if the field is empty show an error state 
+		if (!this.validateMessage(ReactDOM.findDOMNode(this.refs.msg).value)) {
+			this.setState({msgErrors: true})
+		} else {
+			// send the message to the server via the emit event
+			this.socket.emit('spotim/chat', { avatar: 'https://avatars.io/platform/userId', username: ReactDOM.findDOMNode(this.refs.username).value, text: ReactDOM.findDOMNode(this.refs.msg).value } );
+		}
+	}
+	validateMessage(msg) {
+		return msg.length > 0;
 	}
 	render() {
-		const username = '';
+		const username = 'Remy';
 
 		const {chats} = this.state;
 		
@@ -53,13 +65,13 @@ class Chatroom extends React.Component {
 					}
 				</ul>
 				</div>
-				<form className="input" onSubmit={(e) => this.submitMessage(e)}>
+				<form className={`input ${this.state.msgErrors === true ? "error" : "valid" } `} onSubmit={(e) => this.submitMessage(e)}>
 					<div className="input__wrapper">
 						<div className="input__un-wrapper">	
 							<input type="text" ref="username" placeholder="nickname" />
 						</div>
 						<div className="input__message-wrapper">
-							<input type="textarea" ref="msg" placeholder="speak your mind"/>
+							<input type="textarea" ref="msg" placeholder={`${this.state.msgErrors === true ? "add a message first" : "speak your mind"}`}/>
 							<input type="submit" value="send" className="btn btn--primary"/>
 						</div>
 					</div>

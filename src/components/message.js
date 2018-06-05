@@ -1,7 +1,7 @@
 import React from 'react';
-
-const Message = ({chat, user, index}) => (
-	<li className={`chat-message ${user === chat.username ? "right" : "left" }` }>
+import {slugify} from '../helpers.js';
+const Message = ({chat, user}) => (
+	<li data-username={slugify(chat.username)} data-user={slugify(user)} className={`chat-message ${slugify(user) === slugify(chat.username) ? "currentUser" : "defaultUser" }` }>
     <span className="message-avatar"><img src={chat.avatar} alt="altText" /></span>
     <h4 className="h4">{chat.username}</h4>
 
