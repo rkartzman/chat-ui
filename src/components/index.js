@@ -27,7 +27,7 @@ class App extends Component {
         <div className={'spotim-title'}>
           Welcome to the Spot.IM Chat app
         </div>
-        <div>
+        <div className="logo-wrap">
           <Logo>
             <Image size={'tiny'} src={logo}/>
           </Logo>

@@ -1,83 +1,67 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import io from "socket.io-client";
-
+import Message from './message.js';
 
 
 class Chatroom extends React.Component {
 	constructor(props) {
 		super(props);
+		console.log('initialize chatroom Component');
 
 		this.state = {
 			chats: [
 				
 			]
 		}
+
+		this.socket = io("https://spotim-demo-chat-server.herokuapp.com");
+		this.socket.on('spotim/chat', (msg) => {
+			this.setState({
+				chats: this.state.chats.concat([{
+					avatar: msg.avatar,
+					username: msg.username,
+					text: msg.text,
+				}])
+			}, this.clearFormFields)
+		})
+
 		this.submitMessage = this.submitMessage.bind(this);
+	}
+	clearFormFields() {
+		ReactDOM.findDOMNode(this.refs.msg).value = '';
+		ReactDOM.findDOMNode(this.refs.username).value = '';
 	}
 	submitMessage(e) {
 		e.preventDefault();
-		const socket = io("https://spotim-demo-chat-server.herokuapp.com");
-		socket.emit('spotim/chat', { avatar: 'https://avatars.io/platform/userId', username: 'Remy K', text: ReactDOM.findDOMNode(this.refs.msg).value } );
-		socket.on('spotim/chat', (msg) => {
-			// console.log('hey message');
-			// console.log(msg);
-			this.setState({
-				chats: this.state.chats.concat([{
-					avatar: 'https://avatars.io/platform/userId',
-					username: 'Remy K',
-					text: ReactDOM.findDOMNode(this.refs.msg).value,
-				}])
-			}, () => {
-				ReactDOM.findDOMNode(this.refs.msg).value = '';
-			})
-		})
+		this.socket.emit('spotim/chat', { avatar: 'https://avatars.io/platform/userId', username: ReactDOM.findDOMNode(this.refs.username).value, text: ReactDOM.findDOMNode(this.refs.msg).value } );
 	}
 	render() {
-		const username = 'Remy K';
+		const username = '';
 
 		const {chats} = this.state;
-		const socket = io("https://spotim-demo-chat-server.herokuapp.com");
-		socket.on('connection', function(socket){
-			console.log(socket);
-		});
-		socket.on('spotim/chat', (msg) => {
-			// console.log('hey message');
-			// console.log(msg);
-			this.setState({
-				chats: this.state.chats.concat([{
-					avatar: 'https://avatars.io/platform/userId',
-					username: 'Remy K',
-					text: ReactDOM.findDOMNode(this.refs.msg).value,
-				}])
-			}, () => {
-				ReactDOM.findDOMNode(this.refs.msg).value = '';
-			})
-		})
 		
 		return (
 			<div className="chatroom"> 
-				<h1> Chatterbox </h1>
+				<div className="chat__wrap">
 				<ul className="chats" ref="chats">
 					{
-						chats.map((chat) => 
-							 <li className="chat">
-					      <span><img src={chat.avatar} alt="altText" />{chat.username}</span>
-
-					      <p>{chat.text}</p>
-					    </li>
+						chats.map((chat, index) => 
+							<Message chat={chat} user={username} key={index.toString()}  />
+							 
 						)
 					}
 				</ul>
+				</div>
 				<form className="input" onSubmit={(e) => this.submitMessage(e)}>
 					<div className="input__wrapper">
 						<div className="input__un-wrapper">	
-							<label>Username:</label>
-							<input type="text" ref="username" />
+							<input type="text" ref="username" placeholder="nickname" />
 						</div>
-
-						<input type="textarea" ref="msg" />
-						<input type="submit" value="submit" className="btn btn--primary"/>
+						<div className="input__message-wrapper">
+							<input type="textarea" ref="msg" placeholder="speak your mind"/>
+							<input type="submit" value="send" className="btn btn--primary"/>
+						</div>
 					</div>
 				</form>
 			</div>
