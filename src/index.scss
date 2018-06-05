@@ -45,22 +45,18 @@ input[type="textarea"] {
   color: #f0f0f0;
   font-size: 1.2rem;
   resize: none;
-  // line-height: 20px;
   padding: 15px;
   padding-right: 150px;
   letter-spacing: .5px;
   vertical-align: middle;
 }
-
+// Chatroom component styling
 .chatroom {
-  // min-height: 200px;
   position: relative;
   height: calc(100% - 137px);
-  // overflow: scroll;
   background: $light-gray-1;
   .chat__wrap {
     overflow-y: auto; 
-    // padding: 10px 20px;
     position: absolute;
     height: calc(100% - 80px);
     left: 0;
@@ -89,7 +85,6 @@ input[type="textarea"] {
     position: absolute;
     bottom: 0;
     width: 100%;
-    // border: 10px solid #000;
     box-shadow: 0 0 5px 2px rgba(0,0,0,.3);
     border-top: 1px solid hsla(0,0%,100%,.05);
     &.error {
@@ -198,7 +193,6 @@ input[type="textarea"] {
 }
 
 // button styling 
-
 .btn {
   &--primary {
     position: absolute;
